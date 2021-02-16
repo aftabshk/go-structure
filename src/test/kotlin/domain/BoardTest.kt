@@ -3,63 +3,11 @@ package domain
 import domain.Color.BLACK
 import domain.Color.WHITE
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class BoardTest {
-
-    @Test
-    fun `should return false if one stone is surrounded by four opponent stones`() {
-        val board = Board(
-            upperBound = Point(8, 8),
-            lowerBound = Point(1, 1),
-            state = mutableMapOf(
-                Point(1, 2) to Stone(WHITE, Point(1, 2)),
-                Point(2, 1) to Stone(WHITE, Point(2, 1)),
-                Point(3, 2) to Stone(WHITE, Point(3, 2)),
-                Point(2, 3) to Stone(WHITE, Point(2, 3))
-            )
-        )
-
-        val actual = board.isSurrounded(Stone(BLACK, Point(2, 2)))
-
-        actual shouldBe false
-    }
-
-    @Test
-    fun `should return true if one stone is surrounded by three opponent stones and one empty point`() {
-        val board = Board(
-            upperBound = Point(8, 8),
-            lowerBound = Point(1, 1),
-            state = mutableMapOf(
-                Point(1, 2) to Stone(WHITE, Point(1, 2)),
-                Point(2, 1) to Stone(WHITE, Point(2, 1)),
-                Point(3, 2) to Stone(WHITE, Point(3, 2))
-            )
-        )
-
-        val actual = board.isSurrounded(Stone(BLACK, Point(2, 2)))
-
-        actual shouldBe true
-    }
-
-    @Test
-    fun `should return false if one stone is surrounded by three opponent stones and one same color stone`() {
-        val board = Board(
-            upperBound = Point(8, 8),
-            lowerBound = Point(1, 1),
-            state = mutableMapOf(
-                Point(1, 2) to Stone(WHITE, Point(1, 2)),
-                Point(2, 1) to Stone(WHITE, Point(2, 1)),
-                Point(3, 2) to Stone(WHITE, Point(3, 2)),
-                Point(2, 3) to Stone(BLACK, Point(2, 3))
-            )
-        )
-
-        val actual = board.isSurrounded(Stone(BLACK, Point(2, 2)))
-
-        actual shouldBe false
-    }
 
     @Test
     fun `should return two stones connected in a straight line`() {
@@ -187,7 +135,7 @@ class BoardTest {
             )
         )
 
-        val stones = listOf(Stone(BLACK, Point(2, 2)), Stone(BLACK, Point(3, 2)))
+        val stones = setOf(Stone(BLACK, Point(2, 2)), Stone(BLACK, Point(3, 2)))
 
         board.areCaptured(stones) shouldBe true
     }
@@ -213,7 +161,7 @@ class BoardTest {
             )
         )
 
-        val stones = listOf(
+        val stones = setOf(
             Stone(BLACK, Point(4, 5)),
             Stone(BLACK, Point(5, 5)),
             Stone(BLACK, Point(4, 6)),
@@ -245,7 +193,7 @@ class BoardTest {
             )
         )
 
-        val stones = listOf(
+        val stones = setOf(
             Stone(BLACK, Point(4, 5)),
             Stone(BLACK, Point(3, 6)),
             Stone(BLACK, Point(5, 6)),
@@ -276,7 +224,7 @@ class BoardTest {
             )
         )
 
-        val stones = listOf(
+        val stones = setOf(
             Stone(BLACK, Point(4, 5)),
             Stone(BLACK, Point(3, 6)),
             Stone(BLACK, Point(5, 6)),
@@ -298,7 +246,7 @@ class BoardTest {
             )
         )
 
-        val stones = listOf(Stone(BLACK, Point(1, 1)))
+        val stones = setOf(Stone(BLACK, Point(1, 1)))
 
         board.areCaptured(stones) shouldBe true
     }
@@ -318,8 +266,37 @@ class BoardTest {
             )
         )
 
-        val stones = listOf(Stone(WHITE, Point(3, 1)), Stone(WHITE, Point(2, 1)))
+        val stones = setOf(Stone(WHITE, Point(3, 1)), Stone(WHITE, Point(2, 1)))
 
         board.areCaptured(stones) shouldBe true
+    }
+
+    @Test
+    fun `should capture stones`() {
+        val board = Board(
+            upperBound = Point(8, 8),
+            lowerBound = Point(1, 1),
+            state = mutableMapOf(
+                Point(3, 1) to Stone(WHITE, Point(3, 1)),
+                Point(2, 1) to Stone(WHITE, Point(2, 1)),
+                Point(1, 1) to Stone(BLACK, Point(1, 1)),
+                Point(2, 2) to Stone(BLACK, Point(2, 2)),
+                Point(3, 2) to Stone(BLACK, Point(3, 2)),
+                Point(4, 1) to Stone(BLACK, Point(4, 1)),
+            )
+        )
+
+        val stonesToBeCaptured = setOf(
+            Stone(BLACK, Point(1, 1)),
+            Stone(BLACK, Point(2, 2)),
+            Stone(BLACK, Point(3, 2)),
+            Stone(BLACK, Point(4, 1)),
+        )
+        board.capture(stonesToBeCaptured)
+
+        board.state shouldContainExactly mapOf(
+            Point(3, 1) to Stone(WHITE, Point(3, 1)),
+            Point(2, 1) to Stone(WHITE, Point(2, 1)),
+        )
     }
 }
