@@ -3,14 +3,14 @@ package domain
 data class Board(
     val upperBound: Point,
     val lowerBound: Point,
-    val state: MutableMap<Point, Stone> // Should be private
+    private val state: MutableMap<Point, Stone>
 ) {
 
     fun areCaptured(stones: Set<Stone>) = stones.all { isSurrounded(it) }
 
     fun getStonesConnectedTo(stone: Stone, connectedStones: Set<Stone> = emptySet()): Set<Stone> {
         val neighbours = stone.point.neighbours(lowerBound, upperBound)
-        val stones = getStonesIfConnectedFrom(neighbours, stone, connectedStones)
+        val stones = getStonesIfConnectedFrom(neighbours, stone).minus(connectedStones)
         if (stones.isEmpty()) {
             return connectedStones + stone
         }
@@ -23,6 +23,14 @@ data class Board(
         stonesToBeCaptured.forEach { state.remove(it.point) }
     }
 
+    fun playStone(point: Point, stone: Stone) {
+        this.state[point] = stone
+    }
+
+    fun getBoardState(): Map<Point, Stone> {
+        return this.state.toMap()
+    }
+
     private fun isSurrounded(stone: Stone): Boolean {
         return stone.point.neighbours(lowerBound, upperBound).all {
             state[it]?.color != null
@@ -31,13 +39,8 @@ data class Board(
 
     private fun getStonesIfConnectedFrom(
         neighbours: List<Point>,
-        stone: Stone,
-        connectedStones: Set<Stone>
-    ): List<Stone>{
-        return neighbours.filter {
-            state.containsKey(it) && state[it]!!.color == stone.color && !connectedStones.contains(stone.copy(point = it))
-        }.map {
-            state[it]!!
-        }
+        stone: Stone
+    ): Set<Stone>{
+        return neighbours.filter { state[it]?.color == stone.color }.map { state[it]!! }.toSet()
     }
 }

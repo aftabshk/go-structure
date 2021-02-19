@@ -7,7 +7,7 @@ data class Game(
 
     fun play(color: Color, point: Point) {
         val stone = Stone(color, point)
-        board.state[point] = stone
+        board.playStone(point, stone)
         val currentPlayer = players.find { it.stoneColor == color }!!
         currentPlayer.moves.add(stone)
         captureStones(point, color, currentPlayer)
@@ -27,8 +27,8 @@ data class Game(
 
     private fun getOpponentStones(point: Point, color: Color): List<Stone> {
         val neighbours = point.neighbours(board.lowerBound, board.upperBound)
-        return neighbours.filter { isOpponentStone(it, color) }.map { board.state[it]!! }
+        return neighbours.filter { isOpponentStone(it, color) }.map { board.getBoardState()[it]!! }
     }
 
-    private fun isOpponentStone(it: Point, color: Color) = board.state[it]?.color == color.opponentColor()
+    private fun isOpponentStone(it: Point, color: Color) = board.getBoardState()[it]?.color == color.opponentColor()
 }

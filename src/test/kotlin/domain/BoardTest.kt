@@ -326,7 +326,7 @@ class BoardTest {
         )
         board.capture(stonesToBeCaptured)
 
-        board.state shouldContainExactly mapOf(
+        board.getBoardState() shouldContainExactly mapOf(
             Point(3, 1) to Stone(WHITE, Point(3, 1)),
             Point(2, 1) to Stone(WHITE, Point(2, 1)),
         )
