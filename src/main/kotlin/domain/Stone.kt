@@ -6,6 +6,16 @@ data class Stone(
 )
 
 enum class Color{
-    WHITE,
-    BLACK
+    WHITE {
+        override fun opponentColor(): Color {
+            return BLACK
+        }
+    },
+    BLACK {
+        override fun opponentColor(): Color {
+            return WHITE
+        }
+    };
+
+    abstract fun opponentColor(): Color
 }

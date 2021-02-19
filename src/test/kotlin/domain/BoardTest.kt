@@ -272,6 +272,38 @@ class BoardTest {
     }
 
     @Test
+    fun `should return false when black has one liberty`() {
+        val board = Board(
+            upperBound = Point(9, 9),
+            lowerBound = Point(1, 1),
+            state = mutableMapOf(
+                Point(2, 5) to Stone(WHITE, Point(2, 5)),
+                Point(3, 5) to Stone(WHITE, Point(3, 5)),
+                Point(4, 5) to Stone(WHITE, Point(4, 5)),
+                Point(5, 5) to Stone(WHITE, Point(5, 5)),
+                Point(2, 4) to Stone(WHITE, Point(2, 4)),
+                Point(3, 4) to Stone(BLACK, Point(3, 4)),
+                Point(4, 4) to Stone(BLACK, Point(4, 4)),
+                Point(5, 4) to Stone(WHITE, Point(5, 4)),
+                Point(2, 3) to Stone(WHITE, Point(2, 3)),
+                Point(3, 3) to Stone(WHITE, Point(3, 3)),
+                Point(5, 3) to Stone(WHITE, Point(5, 3)),
+                Point(2, 2) to Stone(WHITE, Point(2, 2)),
+                Point(3, 2) to Stone(WHITE, Point(3, 2)),
+                Point(4, 2) to Stone(WHITE, Point(4, 2)),
+                Point(5, 2) to Stone(WHITE, Point(5, 2)),
+            )
+        )
+
+        val stones = setOf(
+            Stone(BLACK, Point(3, 4)),
+            Stone(BLACK, Point(4, 4))
+        )
+
+        board.areCaptured(stones) shouldBe false
+    }
+
+    @Test
     fun `should capture stones`() {
         val board = Board(
             upperBound = Point(8, 8),

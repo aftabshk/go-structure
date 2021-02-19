@@ -6,7 +6,7 @@ data class Board(
     val state: MutableMap<Point, Stone> // Should be private
 ) {
 
-    fun areCaptured(stones: Set<Stone>) = stones.any { !isSurrounded(it) }
+    fun areCaptured(stones: Set<Stone>) = stones.all { isSurrounded(it) }
 
     fun getStonesConnectedTo(stone: Stone, connectedStones: Set<Stone> = emptySet()): Set<Stone> {
         val neighbours = stone.point.neighbours(lowerBound, upperBound)
@@ -24,8 +24,8 @@ data class Board(
     }
 
     private fun isSurrounded(stone: Stone): Boolean {
-        return stone.point.neighbours(lowerBound, upperBound).any {
-            state[it]?.color == null
+        return stone.point.neighbours(lowerBound, upperBound).all {
+            state[it]?.color != null
         }
     }
 
