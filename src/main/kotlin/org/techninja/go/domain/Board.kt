@@ -3,8 +3,19 @@ package org.techninja.go.domain
 data class Board(
     val upperBound: Point,
     val lowerBound: Point,
-    private val state: MutableMap<Point, Stone>
+    private val state: MutableMap<Point, Stone> = mutableMapOf()
 ) {
+
+    companion object {
+
+        fun create(boardSize: GameSize): Board {
+            return when (boardSize) {
+                GameSize.NINE_BY_NINE -> Board(upperBound = Point(9,9), lowerBound = Point(1,1))
+                GameSize.THIRTEEN_BY_THIRTEEN -> Board(upperBound = Point(13,13), lowerBound = Point(1,1))
+                GameSize.NINETEEN_BY_NINETEEN -> Board(upperBound = Point(19,19), lowerBound = Point(1,1))
+            }
+        }
+    }
 
     fun areCaptured(stones: Set<Stone>) = stones.all { isSurrounded(it) }
 

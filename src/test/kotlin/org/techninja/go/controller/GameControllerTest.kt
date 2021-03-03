@@ -8,11 +8,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.techninja.go.builders.GameBuilder
+import org.techninja.go.controller.view.GameCreationRequest
 import org.techninja.go.controller.view.GameView
 import org.techninja.go.controller.view.Move
 import org.techninja.go.domain.*
 import org.techninja.go.domain.Color.BLACK
 import org.techninja.go.domain.Color.WHITE
+import org.techninja.go.domain.GameSize.NINE_BY_NINE
 import reactor.core.publisher.Mono
 
 @WebFluxTest(GameController::class)
@@ -88,5 +91,28 @@ class GameControllerTest(
             .responseBody
 
         actualGame shouldBe GameView.from(expectedGame)
+    }
+
+    @Test
+    fun `should use game repository to create a game`() {
+        val game = GameBuilder().build()
+
+        every {
+            gameService.create(any())
+        } returns Mono.just(game)
+
+        val actualGame = webTestClient.post()
+            .uri("/games/create")
+            .bodyValue(GameCreationRequest(NINE_BY_NINE))
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(GameView::class.java)
+            .returnResult()
+            .responseBody
+
+        verify(exactly = 1) {
+            gameService.create(NINE_BY_NINE)
+        }
+        actualGame shouldBe GameView.from(game)
     }
 }

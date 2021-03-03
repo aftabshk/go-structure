@@ -2,6 +2,7 @@ package org.techninja.go.domain
 
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
+import java.util.*
 
 @Document(collection = "game")
 data class Game(
@@ -10,6 +11,16 @@ data class Game(
     val players: List<Player>,
     val board: Board
 ) {
+
+    companion object {
+        fun create(gameSize: GameSize): Game {
+            return Game(
+                id = UUID.randomUUID().toString(),
+                players = listOf(Player(stoneColor = Color.BLACK), Player(stoneColor = Color.WHITE)),
+                board = Board.create(gameSize)
+            )
+        }
+    }
 
     fun play(color: Color, point: Point) {
         val stone = Stone(color, point)
