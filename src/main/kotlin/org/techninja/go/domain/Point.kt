@@ -1,5 +1,10 @@
-package domain
+package org.techninja.go.domain
 
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.KeyDeserializer
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+
+@JsonDeserialize(keyUsing = PointDeserializer::class)
 data class Point(
     val x: Int,
     val y: Int
@@ -24,5 +29,17 @@ data class Point(
         }.filter {
             it.isWithinBound(lowerBound, upperBound)
         }
+    }
+
+    override fun toString(): String {
+        return "$x, $y"
+    }
+}
+
+class PointDeserializer : KeyDeserializer() {
+
+    override fun deserializeKey(key: String, deserializationContext: DeserializationContext): Point {
+        val (x, y) = key.split(", ")
+        return Point(x.toInt(), y.toInt())
     }
 }

@@ -1,11 +1,11 @@
-package domain
+package org.techninja.go.domain
 
-import domain.Color.BLACK
-import domain.Color.WHITE
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import org.techninja.go.domain.Color.BLACK
+import org.techninja.go.domain.Color.WHITE
 
 class BoardTest {
 
@@ -326,7 +326,7 @@ class BoardTest {
         )
         board.capture(stonesToBeCaptured)
 
-        board.getBoardState() shouldContainExactly mapOf(
+        board.getState() shouldContainExactly mapOf(
             Point(3, 1) to Stone(WHITE, Point(3, 1)),
             Point(2, 1) to Stone(WHITE, Point(2, 1)),
         )

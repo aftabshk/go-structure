@@ -1,4 +1,4 @@
-package domain
+package org.techninja.go.domain
 
 data class Player(
     val stoneColor: Color,

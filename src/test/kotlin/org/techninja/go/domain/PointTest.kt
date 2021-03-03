@@ -1,5 +1,7 @@
-package domain
+package org.techninja.go.domain
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -44,5 +46,11 @@ class PointTest {
             Point(1, 2),
             Point(2, 1)
         )
+    }
+
+    @Test
+    fun name() {
+        val writeValueAsString = jacksonObjectMapper().writeValueAsString(Point(1, 2))
+        println(jacksonObjectMapper().readValue<Point>(writeValueAsString))
     }
 }

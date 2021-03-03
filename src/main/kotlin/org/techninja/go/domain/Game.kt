@@ -1,6 +1,12 @@
-package domain
+package org.techninja.go.domain
 
+import org.springframework.data.mongodb.core.index.Indexed
+import org.springframework.data.mongodb.core.mapping.Document
+
+@Document(collection = "game")
 data class Game(
+    @Indexed(unique = true)
+    val id: String,
     val players: List<Player>,
     val board: Board
 ) {
@@ -27,8 +33,8 @@ data class Game(
 
     private fun getOpponentStones(point: Point, color: Color): List<Stone> {
         val neighbours = point.neighbours(board.lowerBound, board.upperBound)
-        return neighbours.filter { isOpponentStone(it, color) }.map { board.getBoardState()[it]!! }
+        return neighbours.filter { isOpponentStone(it, color) }.map { board.getState()[it]!! }
     }
 
-    private fun isOpponentStone(it: Point, color: Color) = board.getBoardState()[it]?.color == color.opponentColor()
+    private fun isOpponentStone(it: Point, color: Color) = board.getState()[it]?.color == color.opponentColor()
 }

@@ -1,4 +1,4 @@
-package domain
+package org.techninja.go.domain
 
 data class Board(
     val upperBound: Point,
@@ -27,7 +27,7 @@ data class Board(
         this.state[point] = stone
     }
 
-    fun getBoardState(): Map<Point, Stone> {
+    fun getState(): Map<Point, Stone> {
         return this.state.toMap()
     }
 
