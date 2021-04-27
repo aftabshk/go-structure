@@ -11,7 +11,7 @@ data class GameView(
 ) {
     companion object {
         fun from(game: Game): GameView {
-            return GameView(game.id, game.players, game.board)
+            return GameView(game.gameId, game.players, game.board)
         }
     }
 }

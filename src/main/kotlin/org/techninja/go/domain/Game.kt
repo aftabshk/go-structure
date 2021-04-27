@@ -1,13 +1,13 @@
 package org.techninja.go.domain
 
-import org.springframework.data.mongodb.core.index.Indexed
+import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 
 @Document(collection = "game")
 data class Game(
-    @Indexed(unique = true)
-    val id: String,
+    @Id
+    val gameId: String,
     val players: List<Player>,
     val board: Board
 ) {
@@ -15,7 +15,7 @@ data class Game(
     companion object {
         fun create(gameSize: GameSize): Game {
             return Game(
-                id = UUID.randomUUID().toString(),
+                gameId = UUID.randomUUID().toString(),
                 players = listOf(Player(stoneColor = Color.BLACK), Player(stoneColor = Color.WHITE)),
                 board = Board.create(gameSize)
             )

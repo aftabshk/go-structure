@@ -37,7 +37,7 @@ class GameControllerTest(
             state = mutableMapOf(Point(1, 1) to Stone(BLACK, Point(1, 1)))
         )
         val expectedGame = Game(
-            id = "1",
+            gameId = "1",
             players = players,
             board = board
         )
@@ -72,7 +72,7 @@ class GameControllerTest(
             state = mutableMapOf(Point(1, 1) to Stone(BLACK, Point(1, 1)))
         )
         val expectedGame = Game(
-            id = "1",
+            gameId = "1",
             players = players,
             board = board
         )

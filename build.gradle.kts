@@ -18,7 +18,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.1.2")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive:2.4.3")
-    implementation("org.springframework.boot:spring-boot-starter-web:2.4.3")
     implementation(kotlin("stdlib"))
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.1")
 

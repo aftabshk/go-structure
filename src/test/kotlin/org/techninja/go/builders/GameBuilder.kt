@@ -9,7 +9,7 @@ data class GameBuilder(
 ) {
     fun build(): Game {
         return Game(
-            id = id,
+            gameId = id,
             players = players,
             board = board
         )

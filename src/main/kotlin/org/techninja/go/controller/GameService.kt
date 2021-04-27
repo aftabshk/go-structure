@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono
 @Component
 class GameService(val gameRepository: GameRepository) {
     fun playMove(gameId: String, stone: Stone): Mono<Game> {
-        return gameRepository.findById(gameId).map {
+        return gameRepository.findByGameId(gameId).map {
             it.play(stone.color, stone.point)
             it
         }.flatMap {

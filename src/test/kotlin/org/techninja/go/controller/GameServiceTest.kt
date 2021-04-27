@@ -34,7 +34,7 @@ class GameServiceTest {
     fun `should use game repository to play move`() {
         val game = mockk<Game>(relaxed = true)
         every {
-            gameRepository.findById(any<String>())
+            gameRepository.findByGameId(any())
         } returns Mono.just(game)
         every {
             gameRepository.save(any())
@@ -45,7 +45,7 @@ class GameServiceTest {
 
         assertNextWith(actualGame) {
             verify(exactly = 1) {
-                gameRepository.findById("1")
+                gameRepository.findByGameId("1")
                 game.play(stone.color, stone.point)
                 gameRepository.save(game)
             }
@@ -56,7 +56,7 @@ class GameServiceTest {
     fun `should return the game`() {
         val game = mockk<Game>(relaxed = true)
         every {
-            gameRepository.findById(any<String>())
+            gameRepository.findByGameId(any())
         } returns Mono.just(game)
         every {
             gameRepository.save(any())
@@ -93,7 +93,7 @@ class GameServiceTest {
             verify(exactly = 1) {
                 gameRepository.save(capture(gameSlot))
             }
-            gameSlot.captured.shouldBeEqualToIgnoringFields(game, Game::id)
+            gameSlot.captured.shouldBeEqualToIgnoringFields(game, Game::gameId)
         }
     }
 
@@ -116,7 +116,7 @@ class GameServiceTest {
         val actualGame = gameService.create(NINETEEN_BY_NINETEEN)
 
         assertNextWith(actualGame) {
-            it.shouldBeEqualToIgnoringFields(game, Game::id)
+            it.shouldBeEqualToIgnoringFields(game, Game::gameId)
         }
     }
 }
