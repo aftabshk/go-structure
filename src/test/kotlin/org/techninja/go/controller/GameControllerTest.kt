@@ -16,6 +16,7 @@ import org.techninja.go.domain.*
 import org.techninja.go.domain.Color.BLACK
 import org.techninja.go.domain.Color.WHITE
 import org.techninja.go.domain.GameSize.NINE_BY_NINE
+import org.techninja.go.service.GameService
 import reactor.core.publisher.Mono
 
 @WebFluxTest(GameController::class)
@@ -94,7 +95,7 @@ class GameControllerTest(
     }
 
     @Test
-    fun `should use game repository to create a game`() {
+    fun `should use game service to create a game`() {
         val game = GameBuilder().build()
 
         every {
@@ -112,6 +113,28 @@ class GameControllerTest(
 
         verify(exactly = 1) {
             gameService.create(NINE_BY_NINE)
+        }
+        actualGame shouldBe GameView.from(game)
+    }
+
+    @Test
+    fun `should use game service to retrieve the game from db`() {
+        val game = GameBuilder().build()
+
+        every {
+            gameService.getById(any())
+        } returns Mono.just(game)
+
+        val actualGame = webTestClient.get()
+            .uri("/games/1")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(GameView::class.java)
+            .returnResult()
+            .responseBody
+
+        verify(exactly = 1) {
+            gameService.getById("1")
         }
         actualGame shouldBe GameView.from(game)
     }

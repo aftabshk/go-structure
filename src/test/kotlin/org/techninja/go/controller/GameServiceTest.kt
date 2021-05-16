@@ -16,6 +16,8 @@ import org.techninja.go.domain.GameSize.NINE_BY_NINE
 import org.techninja.go.domain.Player
 import org.techninja.go.domain.Point
 import org.techninja.go.domain.Stone
+import org.techninja.go.repository.GameRepository
+import org.techninja.go.service.GameService
 import org.techninja.go.utils.assertNextWith
 import reactor.core.publisher.Mono
 
@@ -53,7 +55,7 @@ class GameServiceTest {
     }
 
     @Test
-    fun `should return the game`() {
+    fun `should play move and return the game`() {
         val game = mockk<Game>(relaxed = true)
         every {
             gameRepository.findByGameId(any())
@@ -117,6 +119,33 @@ class GameServiceTest {
 
         assertNextWith(actualGame) {
             it.shouldBeEqualToIgnoringFields(game, Game::gameId)
+        }
+    }
+
+    @Test
+    fun `should return the game`() {
+        val game = GameBuilder(
+            players = listOf(
+                Player(stoneColor = BLACK),
+                Player(stoneColor = WHITE)
+            ),
+            board = BoardBuilder(
+                upperBound = Point(19, 19),
+                lowerBound = Point(1, 1)
+            ).build()
+        ).build()
+        every {
+            gameRepository.findByGameId("1")
+        } returns Mono.just(game)
+
+        val actualGame = gameService.getById("1")
+
+        assertNextWith(actualGame) {
+            it.shouldBeEqualToIgnoringFields(game, Game::gameId)
+
+            verify(exactly = 1) {
+                gameRepository.findByGameId("1")
+            }
         }
     }
 }

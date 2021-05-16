@@ -1,4 +1,4 @@
-package org.techninja.go.controller
+package org.techninja.go.repository
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Repository
