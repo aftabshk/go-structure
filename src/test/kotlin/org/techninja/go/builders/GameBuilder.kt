@@ -5,13 +5,15 @@ import org.techninja.go.domain.*
 data class GameBuilder(
     val id: String = "",
     val players: List<Player> = listOf(),
-    val board: Board = BoardBuilder().build()
+    val board: Board = BoardBuilder().build(),
+    val currentPlayer: Color = Color.BLACK
 ) {
     fun build(): Game {
         return Game(
             gameId = id,
             players = players,
-            board = board
+            board = board,
+            currentPlayer = currentPlayer
         )
     }
 }

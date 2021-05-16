@@ -3,6 +3,7 @@ package org.techninja.go.domain
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -49,23 +50,51 @@ class GameTest {
 
     @Test
     fun `should play a move on the board for a player`() {
-        val game = Game(gameId= "1", listOf(blackPlayer, whitePlayer), nineByNineBoard)
+        val game = Game(
+            gameId = "1",
+            players = listOf(blackPlayer, whitePlayer),
+            board = nineByNineBoard,
+            currentPlayer = Color.BLACK
+        )
 
         game.play(Color.BLACK, Point(3, 3))
 
         assertSoftly {
             game.board.getState() shouldBe mutableMapOf(Point(3, 3) to Stone(Color.BLACK, Point(3, 3)))
             game.players.find { it.stoneColor == Color.BLACK }!!.moves shouldContain Stone(Color.BLACK, Point(3, 3))
+            game.currentPlayer shouldBe Color.WHITE
+        }
+    }
+
+    @Test
+    fun `should not play if it's not turn of that player`() {
+        val game = Game(
+            gameId = "1",
+            players = listOf(blackPlayer, whitePlayer),
+            board = nineByNineBoard,
+            currentPlayer = Color.BLACK
+        )
+
+        game.play(Color.WHITE, Point(3, 3))
+
+        assertSoftly {
+            game.board.getState() shouldBe mutableMapOf()
+            game.players.find { it.stoneColor == Color.BLACK }!!.moves shouldNotContain Stone(Color.BLACK, Point(3, 3))
         }
     }
 
     @Test
     fun `should play moves for different players`() {
-        val game = Game(gameId = "1", listOf(blackPlayer, whitePlayer), nineByNineBoard)
+        val game = Game(
+            gameId = "1",
+            players = listOf(blackPlayer, whitePlayer),
+            board = nineByNineBoard,
+            currentPlayer = Color.BLACK
+        )
 
         game.play(Color.BLACK, Point(3, 3))
-        game.play(Color.BLACK, Point(4, 3))
         game.play(Color.WHITE, Point(2, 3))
+        game.play(Color.BLACK, Point(4, 3))
         game.play(Color.WHITE, Point(1, 3))
 
         assertSoftly {
@@ -88,7 +117,12 @@ class GameTest {
 
     @Test
     fun `should capture stones`() {
-        val game = Game(gameId = "1", listOf(blackPlayer, whitePlayer), board)
+        val game = Game(
+            gameId = "1",
+            players = listOf(blackPlayer, whitePlayer),
+            board = board,
+            currentPlayer = Color.WHITE
+        )
 
         game.play(Color.WHITE, Point(1, 2))
 
@@ -111,7 +145,12 @@ class GameTest {
 
     @Test
     fun `should not capture stones if opponent stones has a liberty`() {
-        val game = Game(gameId = "1", listOf(blackPlayer, whitePlayer), boardWithSquareTerritory)
+        val game = Game(
+            gameId = "1",
+            players = listOf(blackPlayer, whitePlayer),
+            board = boardWithSquareTerritory,
+            currentPlayer = Color.WHITE
+        )
 
         game.play(Color.WHITE, Point(3, 3))
 

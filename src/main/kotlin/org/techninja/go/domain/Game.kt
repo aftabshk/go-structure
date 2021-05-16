@@ -9,6 +9,7 @@ data class Game(
     @Id
     val gameId: String,
     val players: List<Player>,
+    var currentPlayer: Color,
     val board: Board
 ) {
 
@@ -17,17 +18,21 @@ data class Game(
             return Game(
                 gameId = UUID.randomUUID().toString(),
                 players = listOf(Player(stoneColor = Color.BLACK), Player(stoneColor = Color.WHITE)),
-                board = Board.create(gameSize)
+                board = Board.create(gameSize),
+                currentPlayer = Color.BLACK
             )
         }
     }
 
     fun play(color: Color, point: Point) {
-        val stone = Stone(color, point)
-        board.playStone(point, stone)
-        val currentPlayer = players.find { it.stoneColor == color }!!
-        currentPlayer.moves.add(stone)
-        captureStones(point, color, currentPlayer)
+        if (this.currentPlayer == color) {
+            val stone = Stone(color, point)
+            board.playStone(point, stone)
+            val currentPlayer = players.find { it.stoneColor == color }!!
+            currentPlayer.moves.add(stone)
+            captureStones(point, color, currentPlayer)
+            this.currentPlayer = this.currentPlayer.opponentColor()
+        }
     }
 
     private fun captureStones(point: Point, color: Color, currentPlayer: Player) {

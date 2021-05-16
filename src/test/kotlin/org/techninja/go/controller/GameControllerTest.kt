@@ -40,7 +40,8 @@ class GameControllerTest(
         val expectedGame = Game(
             gameId = "1",
             players = players,
-            board = board
+            board = board,
+            currentPlayer = BLACK
         )
         val move = Move(BLACK, Point(1, 1))
         every {
@@ -75,7 +76,8 @@ class GameControllerTest(
         val expectedGame = Game(
             gameId = "1",
             players = players,
-            board = board
+            board = board,
+            currentPlayer = BLACK
         )
         val move = Move(BLACK, Point(1, 1))
         every {
